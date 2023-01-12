@@ -1,4 +1,5 @@
 import 'package:alphabet_list_view/src/enum.dart';
+import 'package:alphabet_list_view/src/scrollbar.dart';
 import 'package:alphabet_list_view/src/typedef.dart';
 import 'package:flutter/material.dart';
 
@@ -82,10 +83,18 @@ class ScrollbarOptions {
     this.jumpToSymbolsWithNoEntries = false,
     this.forcePosition,
     this.symbolBuilder,
+    this.position,
+    this.isAbsolute = false,
   });
 
   /// The width of the sidebar.
   final double width;
+
+  /// The position of the sidebar.
+  final ScrollbarPosition? position;
+
+  /// Scrollbar overlay flag
+  final bool? isAbsolute;
 
   /// Padding around the sidebar.
   final EdgeInsets? padding;
@@ -163,5 +172,19 @@ const List<String> defaultSymbols = [
   'X',
   'Y',
   'Z',
-  '#',
 ];
+
+class ScrollbarPosition{
+  ScrollbarPosition({
+    this.top,
+    this.bottom,
+    this.left,
+    this.right,
+  });
+
+  double? top;
+  double? bottom;
+  double? left;
+  double? right;
+}
+

@@ -40,19 +40,19 @@ class _AlphabetListViewState extends State<AlphabetListView> {
 
   @override
   Widget build(BuildContext context) {
-    late List<AlphabetListViewItemGroup> sortedItems =
-        _generateAfterSymbolsSortedList(
+    late List<AlphabetListViewItemGroup> sortedItems = _generateAfterSymbolsSortedList(
       widget.items,
       widget.options.scrollbarOptions.symbols.toSet().toList(),
     );
     TextDirection? rowTextDirection;
-    if (widget.options.scrollbarOptions.forcePosition ==
-        AlphabetScrollbarPosition.left) {
+    if (widget.options.scrollbarOptions.forcePosition == AlphabetScrollbarPosition.left) {
       rowTextDirection = TextDirection.rtl;
-    } else if (widget.options.scrollbarOptions.forcePosition ==
-        AlphabetScrollbarPosition.right) {
+    } else if (widget.options.scrollbarOptions.forcePosition == AlphabetScrollbarPosition.right) {
       rowTextDirection = TextDirection.ltr;
     }
+
+    final position = widget.options.scrollbarOptions.position;
+    final isAbsolute = widget.options.scrollbarOptions.isAbsolute ?? false;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -72,15 +72,35 @@ class _AlphabetListViewState extends State<AlphabetListView> {
                 alphabetOverlayOptions: widget.options.overlayOptions,
                 symbolChangeNotifierScrollbar: symbolChangeNotifierScrollbar,
               ),
+              if (isAbsolute)
+                Positioned(
+                  child: AlphabetScrollbar(
+                    items: sortedItems,
+                    alphabetScrollbarOptions: widget.options.scrollbarOptions,
+                    symbolChangeNotifierScrollbar: symbolChangeNotifierScrollbar,
+                    symbolChangeNotifierList: symbolChangeNotifierList,
+                  ),
+                  top: position?.top,
+                  bottom: position?.bottom,
+                  left: position?.left,
+                  right: position?.right,
+                ),
             ],
           ),
         ),
-        AlphabetScrollbar(
-          items: sortedItems,
-          alphabetScrollbarOptions: widget.options.scrollbarOptions,
-          symbolChangeNotifierScrollbar: symbolChangeNotifierScrollbar,
-          symbolChangeNotifierList: symbolChangeNotifierList,
-        ),
+        if (!isAbsolute)
+          Positioned(
+            child: AlphabetScrollbar(
+              items: sortedItems,
+              alphabetScrollbarOptions: widget.options.scrollbarOptions,
+              symbolChangeNotifierScrollbar: symbolChangeNotifierScrollbar,
+              symbolChangeNotifierList: symbolChangeNotifierList,
+            ),
+            top: position?.top,
+            bottom: position?.bottom,
+            left: position?.left,
+            right: position?.right,
+          ),
       ],
     );
   }
